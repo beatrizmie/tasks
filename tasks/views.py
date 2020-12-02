@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from tasks.models import Task
 from tasks.serializer import TaskSerializer
+from django.forms.models import model_to_dict
 
 def index(request):
     return HttpResponse("Hello, world. You're at the tasks index.")
@@ -41,10 +42,9 @@ def update_task_title(request, task_id):
     if request.method == 'PUT':
         task = Task.objects.get(pk=task_id)
         data = JSONParser().parse(request)
-        serializer = TaskSerializer(data=data)
         task.title = data['title']
         task.save()
-        return JsonResponse(serializer.data, status=201, safe=False)
+        return JsonResponse(model_to_dict(task), status=201, safe=False)
 
 # UPDATE task pub_date
 @csrf_exempt
@@ -52,10 +52,9 @@ def update_task_pub_date(request, task_id):
     if request.method == 'PUT':
         task = Task.objects.get(pk=task_id)
         data = JSONParser().parse(request)
-        serializer = TaskSerializer(data=data)
         task.pub_date = data['pub_date']
         task.save()
-        return JsonResponse(serializer.data, status=201, safe=False)
+        return JsonResponse(model_to_dict(task), status=201, safe=False)
 
 # UPDATE task description
 @csrf_exempt
@@ -63,10 +62,9 @@ def update_task_description(request, task_id):
     if request.method == 'PUT':
         task = Task.objects.get(pk=task_id)
         data = JSONParser().parse(request)
-        serializer = TaskSerializer(data=data)
         task.description = data['description']
         task.save()
-        return JsonResponse(serializer.data, status=201, safe=False)
+        return JsonResponse(model_to_dict(task), status=201, safe=False)
 
 # DELETE task
 @csrf_exempt
